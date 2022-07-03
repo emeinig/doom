@@ -1,6 +1,6 @@
 use crate::date::Date;
 
-fn compute_day_of_week(date: &Date) -> isize {
+pub fn compute_day_of_week(date: &Date) -> isize {
     let month_offset: [isize; 12] = [0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4];
     let mut year = date.year;
     let month = date.month;
