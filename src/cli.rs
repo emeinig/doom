@@ -30,7 +30,10 @@ fn date_string_to_date_struct(date_string: String) -> Result<Date, &'static str>
     let month = date_vec[0].parse::<usize>();
     let day = date_vec[1].parse::<isize>();
 
-    if year.is_ok_and(|&year| year >= 1752) && month.is_ok_and(|&month| month > 0 && month <= 12) && day.is_ok_and(|&day| day > 0 && day <= 31) {
+    if year.is_ok_and(|&year| year >= 1752)
+        && month.is_ok_and(|&month| month > 0 && month <= 12)
+        && day.is_ok_and(|&day| day > 0 && day <= 31)
+    {
         Ok(Date {
             year: year.unwrap(),
             month: month.unwrap(),
