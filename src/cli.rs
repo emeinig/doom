@@ -4,8 +4,11 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 pub struct Cli {
+    /// Default format is MM-DD-YYYY
     #[clap(value_parser = nonempty_string_or_none)]
     date: Option<String>,
+    /// Accepted formats are "iso8601", "YMD" (year-month-day), "MYD"
+    /// (month-year-day), & "DMY" (day-month-year)
     #[clap(short, long, value_parser = endian_format)]
     format: Option<DateFormat>,
 }
