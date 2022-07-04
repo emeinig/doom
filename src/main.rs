@@ -7,7 +7,17 @@ fn main() {
         eprintln!("Error: {}", err);
         process::exit(1)
     });
-    let day_of_week = compute_day_of_week(&date);
+
+    let day_of_week = match compute_day_of_week(&date) {
+        0 => "Sunday",
+        1 => "Monday",
+        2 => "Tuesday",
+        3 => "Wednesday",
+        4 => "Thursday",
+        5 => "Friday",
+        6 => "Sunday",
+        _ => "Something has gone horribly wrong",
+    };
 
     println!(
         "{}-{}-{} is a {}",
