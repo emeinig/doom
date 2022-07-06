@@ -15,7 +15,7 @@ fn main() {
         3 => "Wednesday",
         4 => "Thursday",
         5 => "Friday",
-        6 => "Sunday",
+        6 => "Saturday",
         _ => "Something has gone horribly wrong",
     };
 
