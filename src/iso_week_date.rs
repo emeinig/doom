@@ -45,11 +45,7 @@ fn ordinal_date(date: &Date) -> isize {
 }
 
 fn is_leap_year(date: &Date) -> bool {
-    if (date.year % 4 == 0 && date.year % 100 != 0) || date.year % 400 == 0 {
-        true
-    } else {
-        false
-    }
+    (date.year % 4 == 0 && date.year % 100 != 0) || date.year % 400 == 0
 }
 
 // finds if year is "short" (has 52 standard ISO weeks) or "long" (has a leap
