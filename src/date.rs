@@ -1,7 +1,7 @@
 use crate::cli::Cli;
 use crate::cli::DateFormat;
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Date {
     pub year: isize,
     pub month: usize,
@@ -42,8 +42,8 @@ fn build_date_struct(
     }
 }
 
-fn big_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
-    let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
+fn big_endian_to_date_struct(date_string: &str) -> Result<Date, &'static str> {
+    let date_vec = date_string.trim().split('-').collect::<Vec<&str>>();
 
     if date_vec.len() == 3 {
         let year = date_vec[0];
@@ -55,8 +55,8 @@ fn big_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str>
     }
 }
 
-fn middle_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
-    let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
+fn middle_endian_to_date_struct(date_string: &str) -> Result<Date, &'static str> {
+    let date_vec = date_string.trim().split('-').collect::<Vec<&str>>();
 
     if date_vec.len() == 3 {
         let year = date_vec[2];
@@ -68,8 +68,8 @@ fn middle_endian_to_date_struct(date_string: &String) -> Result<Date, &'static s
     }
 }
 
-fn little_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
-    let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
+fn little_endian_to_date_struct(date_string: &str) -> Result<Date, &'static str> {
+    let date_vec = date_string.trim().split('-').collect::<Vec<&str>>();
 
     if date_vec.len() == 3 {
         let year = date_vec[2];
@@ -131,9 +131,9 @@ mod tests {
         let middle_endian = String::from("2-1-1970");
         let little_endian = String::from("1-2-1970");
 
-        let big_date = big_endian_to_date_struct(big_endian);
-        let middle_date = middle_endian_to_date_struct(middle_endian);
-        let little_date = little_endian_to_date_struct(little_endian);
+        let big_date = big_endian_to_date_struct(&big_endian);
+        let middle_date = middle_endian_to_date_struct(&middle_endian);
+        let little_date = little_endian_to_date_struct(&little_endian);
 
         let expected = Ok(Date {
             year: 1970,
@@ -151,7 +151,7 @@ mod tests {
         let test_date = String::from("13-32-1750");
         let expected = Err("Incorrectly formatted date");
 
-        let result = middle_endian_to_date_struct(test_date);
+        let result = middle_endian_to_date_struct(&test_date);
         assert_eq!(result, expected);
     }
 
@@ -160,7 +160,7 @@ mod tests {
         let test_date = String::from("09-22-201a");
         let expected = Err("Incorrectly formatted date");
 
-        let result = middle_endian_to_date_struct(test_date);
+        let result = middle_endian_to_date_struct(&test_date);
         assert_eq!(result, expected);
     }
 
@@ -173,7 +173,7 @@ mod tests {
             day: 22,
         });
 
-        let result = middle_endian_to_date_struct(test_date);
+        let result = middle_endian_to_date_struct(&test_date);
         assert_eq!(result, expected);
     }
 }
