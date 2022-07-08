@@ -1,8 +1,22 @@
+use crate::cli::Cli;
+use crate::cli::DateFormat;
+
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Date {
     pub year: isize,
     pub month: usize,
     pub day: isize,
+}
+
+pub fn parse_date(cli: &Cli) -> Result<Date, &'static str> {
+    let date_string = cli.date.as_ref().ok_or("No Date Given")?;
+
+    match cli.format {
+        Some(DateFormat::BigEndian) => big_endian_to_date_struct(date_string),
+        Some(DateFormat::MiddleEndian) => middle_endian_to_date_struct(date_string),
+        Some(DateFormat::LittleEndian) => little_endian_to_date_struct(date_string),
+        _ => middle_endian_to_date_struct(date_string),
+    }
 }
 
 fn build_date_struct(
@@ -28,31 +42,83 @@ fn build_date_struct(
     }
 }
 
-pub fn big_endian_to_date_struct(date_string: String) -> Result<Date, &'static str> {
+fn big_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
     let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
-    let year = date_vec[0];
-    let month = date_vec[1];
-    let day = date_vec[2];
 
-    build_date_struct(year, month, day)
+    if date_vec.len() == 3 {
+        let year = date_vec[0];
+        let month = date_vec[1];
+        let day = date_vec[2];
+        build_date_struct(year, month, day)
+    } else {
+        Err("Date separators are not recognized")
+    }
 }
 
-pub fn middle_endian_to_date_struct(date_string: String) -> Result<Date, &'static str> {
+fn middle_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
     let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
-    let year = date_vec[2];
-    let month = date_vec[0];
-    let day = date_vec[1];
 
-    build_date_struct(year, month, day)
+    if date_vec.len() == 3 {
+        let year = date_vec[2];
+        let month = date_vec[0];
+        let day = date_vec[1];
+        build_date_struct(year, month, day)
+    } else {
+        Err("Date separators are not recognized")
+    }
 }
 
-pub fn little_endian_to_date_struct(date_string: String) -> Result<Date, &'static str> {
+fn little_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
     let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
-    let year = date_vec[2];
-    let month = date_vec[1];
-    let day = date_vec[0];
 
-    build_date_struct(year, month, day)
+    if date_vec.len() == 3 {
+        let year = date_vec[2];
+        let month = date_vec[1];
+        let day = date_vec[0];
+        build_date_struct(year, month, day)
+    } else {
+        Err("Date separators are not recognized")
+    }
+}
+
+pub fn print_date(date: &Date, day_of_week: isize, format: &Option<DateFormat>) {
+    let human_readable_day_of_week = match day_of_week {
+        0 => "Sunday",
+        1 => "Monday",
+        2 => "Tuesday",
+        3 => "Wednesday",
+        4 => "Thursday",
+        5 => "Friday",
+        6 => "Saturday",
+        _ => "Something has gone horribly wrong",
+    };
+
+    match format {
+        Some(DateFormat::BigEndian) => {
+            println!(
+                "{}-{}-{} is a {}",
+                date.year, date.month, date.day, human_readable_day_of_week
+            );
+        }
+        Some(DateFormat::MiddleEndian) => {
+            println!(
+                "{}-{}-{} is a {}",
+                date.month, date.day, date.year, human_readable_day_of_week
+            );
+        }
+        Some(DateFormat::LittleEndian) => {
+            println!(
+                "{}-{}-{} is a {}",
+                date.day, date.month, date.year, human_readable_day_of_week
+            );
+        }
+        _ => {
+            println!(
+                "{}-{}-{} is a {}",
+                date.month, date.day, date.year, human_readable_day_of_week
+            );
+        }
+    };
 }
 
 #[cfg(test)]

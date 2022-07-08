@@ -1,20 +1,22 @@
-use crate::date::*;
 use clap::Parser;
 
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 pub struct Cli {
-    /// Default format is MM-DD-YYYY
+    /// Default format is MM-DD-YYYY. Slashes and periods are not accepted
     #[clap(value_parser = nonempty_string_or_none)]
-    date: Option<String>,
+    pub date: Option<String>,
     /// Accepted formats are "iso8601", "YMD" (year-month-day), "MYD"
     /// (month-year-day), & "DMY" (day-month-year)
     #[clap(short, long, value_parser = endian_format)]
-    format: Option<DateFormat>,
+    pub format: Option<DateFormat>,
+    /// Prints the ISO Week Date in addition to the day of week
+    #[clap(short, long, action)]
+    pub week_date: bool,
 }
 
 #[derive(Copy, Clone, Debug, PartialEq)]
-enum DateFormat {
+pub enum DateFormat {
     // Big endian or year first (e.g. ISO 8601)
     BigEndian,
     // Little endian or day first (e.g. DD-MM-YYYY)
@@ -39,19 +41,6 @@ fn endian_format(s: &str) -> Result<DateFormat, &'static str> {
         "DMY" => Ok(DateFormat::LittleEndian),
         "" => Ok(DateFormat::MiddleEndian),
         _ => Err("Date format is not recognized or not given"),
-    }
-}
-
-pub fn parse_date() -> Result<Date, &'static str> {
-    let cli = Cli::parse();
-
-    let date_string = cli.date.ok_or("No Date Given")?;
-
-    match cli.format {
-        Some(DateFormat::BigEndian) => big_endian_to_date_struct(date_string),
-        Some(DateFormat::MiddleEndian) => middle_endian_to_date_struct(date_string),
-        Some(DateFormat::LittleEndian) => little_endian_to_date_struct(date_string),
-        _ => middle_endian_to_date_struct(date_string),
     }
 }
 
