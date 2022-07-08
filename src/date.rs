@@ -42,7 +42,7 @@ fn build_date_struct(
     }
 }
 
-pub fn big_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
+fn big_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
     let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
     let year = date_vec[0];
     let month = date_vec[1];
@@ -51,7 +51,7 @@ pub fn big_endian_to_date_struct(date_string: &String) -> Result<Date, &'static 
     build_date_struct(year, month, day)
 }
 
-pub fn middle_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
+fn middle_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
     let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
     let year = date_vec[2];
     let month = date_vec[0];
@@ -60,7 +60,7 @@ pub fn middle_endian_to_date_struct(date_string: &String) -> Result<Date, &'stat
     build_date_struct(year, month, day)
 }
 
-pub fn little_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
+fn little_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
     let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
     let year = date_vec[2];
     let month = date_vec[1];
