@@ -1,7 +1,7 @@
 use crate::cli::Cli;
 use crate::cli::DateFormat;
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Date {
     pub year: isize,
     pub month: usize,

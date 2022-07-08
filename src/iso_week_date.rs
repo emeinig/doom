@@ -1,6 +1,6 @@
 use crate::date::Date;
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct WeekDate {
     pub year: isize,
     pub week_of_year: isize,

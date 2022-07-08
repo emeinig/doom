@@ -15,7 +15,7 @@ pub struct Cli {
     pub week_date: bool,
 }
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum DateFormat {
     // Big endian or year first (e.g. ISO 8601)
     BigEndian,
