@@ -9,7 +9,7 @@ pub struct WeekDate {
 
 pub fn week_number(date: &Date, day_of_week: &isize) -> WeekDate {
     let mut year = date.year;
-    let ordinal_date = ordinal_date(&date);
+    let ordinal_date = ordinal_date(*date);
     let weekday_number = if day_of_week == &0 { 7 } else { *day_of_week };
 
     let week_number = (10 + ordinal_date - weekday_number) / 7;
@@ -32,8 +32,8 @@ pub fn week_number(date: &Date, day_of_week: &isize) -> WeekDate {
 }
 
 // AKA the day of the year. E.g. Nov 5 = 305th day of the year
-fn ordinal_date(date: &Date) -> isize {
-    let leap_year_offset = if is_leap_year(&date) && date.month > 2 {
+fn ordinal_date(date: Date) -> isize {
+    let leap_year_offset = if is_leap_year(date) && date.month > 2 {
         1
     } else {
         0
@@ -44,7 +44,7 @@ fn ordinal_date(date: &Date) -> isize {
     leap_year_offset + month_offset[date.month - 1] + date.day
 }
 
-fn is_leap_year(date: &Date) -> bool {
+fn is_leap_year(date: Date) -> bool {
     (date.year % 4 == 0 && date.year % 100 != 0) || date.year % 400 == 0
 }
 
@@ -147,7 +147,7 @@ mod tests {
             month: 11,
             day: 5,
         };
-        let result = ordinal_date(&date);
+        let result = ordinal_date(date);
         assert_eq!(result, 310);
     }
 
@@ -171,13 +171,13 @@ mod tests {
             day: 1,
         };
 
-        let result1 = is_leap_year(&leap_year);
+        let result1 = is_leap_year(leap_year);
         assert!(result1);
 
-        let result2 = is_leap_year(&leap_century);
+        let result2 = is_leap_year(leap_century);
         assert!(result2);
 
-        let result3 = is_leap_year(&non_leap_century);
+        let result3 = is_leap_year(non_leap_century);
         assert!(!result3);
     }
 }
