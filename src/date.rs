@@ -131,9 +131,9 @@ mod tests {
         let middle_endian = String::from("2-1-1970");
         let little_endian = String::from("1-2-1970");
 
-        let big_date = big_endian_to_date_struct(big_endian);
-        let middle_date = middle_endian_to_date_struct(middle_endian);
-        let little_date = little_endian_to_date_struct(little_endian);
+        let big_date = big_endian_to_date_struct(&big_endian);
+        let middle_date = middle_endian_to_date_struct(&middle_endian);
+        let little_date = little_endian_to_date_struct(&little_endian);
 
         let expected = Ok(Date {
             year: 1970,
@@ -151,7 +151,7 @@ mod tests {
         let test_date = String::from("13-32-1750");
         let expected = Err("Incorrectly formatted date");
 
-        let result = middle_endian_to_date_struct(test_date);
+        let result = middle_endian_to_date_struct(&test_date);
         assert_eq!(result, expected);
     }
 
@@ -160,7 +160,7 @@ mod tests {
         let test_date = String::from("09-22-201a");
         let expected = Err("Incorrectly formatted date");
 
-        let result = middle_endian_to_date_struct(test_date);
+        let result = middle_endian_to_date_struct(&test_date);
         assert_eq!(result, expected);
     }
 
@@ -173,7 +173,7 @@ mod tests {
             day: 22,
         });
 
-        let result = middle_endian_to_date_struct(test_date);
+        let result = middle_endian_to_date_struct(&test_date);
         assert_eq!(result, expected);
     }
 }
