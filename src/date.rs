@@ -1,8 +1,22 @@
+use crate::cli::Cli;
+use crate::cli::DateFormat;
+
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Date {
     pub year: isize,
     pub month: usize,
     pub day: isize,
+}
+
+pub fn parse_date(cli: &Cli) -> Result<Date, &'static str> {
+    let date_string = cli.date.as_ref().ok_or("No Date Given")?;
+
+    match cli.format {
+        Some(DateFormat::BigEndian) => big_endian_to_date_struct(date_string),
+        Some(DateFormat::MiddleEndian) => middle_endian_to_date_struct(date_string),
+        Some(DateFormat::LittleEndian) => little_endian_to_date_struct(date_string),
+        _ => middle_endian_to_date_struct(date_string),
+    }
 }
 
 fn build_date_struct(
@@ -28,7 +42,7 @@ fn build_date_struct(
     }
 }
 
-pub fn big_endian_to_date_struct(date_string: String) -> Result<Date, &'static str> {
+pub fn big_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
     let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
     let year = date_vec[0];
     let month = date_vec[1];
@@ -37,7 +51,7 @@ pub fn big_endian_to_date_struct(date_string: String) -> Result<Date, &'static s
     build_date_struct(year, month, day)
 }
 
-pub fn middle_endian_to_date_struct(date_string: String) -> Result<Date, &'static str> {
+pub fn middle_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
     let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
     let year = date_vec[2];
     let month = date_vec[0];
@@ -46,7 +60,7 @@ pub fn middle_endian_to_date_struct(date_string: String) -> Result<Date, &'stati
     build_date_struct(year, month, day)
 }
 
-pub fn little_endian_to_date_struct(date_string: String) -> Result<Date, &'static str> {
+pub fn little_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
     let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
     let year = date_vec[2];
     let month = date_vec[1];
