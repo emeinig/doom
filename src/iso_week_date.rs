@@ -25,8 +25,8 @@ pub fn week_number(date: &Date, day_of_week: &isize) -> WeekDate {
     };
 
     WeekDate {
-        year: year,
-        week_of_year: week_of_year,
+        year,
+        week_of_year,
         day: weekday_number,
     }
 }
