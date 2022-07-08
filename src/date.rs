@@ -44,29 +44,41 @@ fn build_date_struct(
 
 fn big_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
     let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
-    let year = date_vec[0];
-    let month = date_vec[1];
-    let day = date_vec[2];
 
-    build_date_struct(year, month, day)
+    if date_vec.len() == 3 {
+        let year = date_vec[0];
+        let month = date_vec[1];
+        let day = date_vec[2];
+        build_date_struct(year, month, day)
+    } else {
+        Err("Date separators are not recognized")
+    }
 }
 
 fn middle_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
     let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
-    let year = date_vec[2];
-    let month = date_vec[0];
-    let day = date_vec[1];
 
-    build_date_struct(year, month, day)
+    if date_vec.len() == 3 {
+        let year = date_vec[2];
+        let month = date_vec[0];
+        let day = date_vec[1];
+        build_date_struct(year, month, day)
+    } else {
+        Err("Date separators are not recognized")
+    }
 }
 
 fn little_endian_to_date_struct(date_string: &String) -> Result<Date, &'static str> {
     let date_vec = date_string.trim().split("-").collect::<Vec<&str>>();
-    let year = date_vec[2];
-    let month = date_vec[1];
-    let day = date_vec[0];
 
-    build_date_struct(year, month, day)
+    if date_vec.len() == 3 {
+        let year = date_vec[2];
+        let month = date_vec[1];
+        let day = date_vec[0];
+        build_date_struct(year, month, day)
+    } else {
+        Err("Date separators are not recognized")
+    }
 }
 
 pub fn print_date(date: &Date, day_of_week: isize, format: &Option<DateFormat>) {
