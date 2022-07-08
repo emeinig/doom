@@ -69,6 +69,46 @@ fn little_endian_to_date_struct(date_string: &String) -> Result<Date, &'static s
     build_date_struct(year, month, day)
 }
 
+pub fn print_date(date: &Date, day_of_week: isize, format: &Option<DateFormat>) {
+    let human_readable_day_of_week = match day_of_week {
+        0 => "Sunday",
+        1 => "Monday",
+        2 => "Tuesday",
+        3 => "Wednesday",
+        4 => "Thursday",
+        5 => "Friday",
+        6 => "Saturday",
+        _ => "Something has gone horribly wrong",
+    };
+
+    match format {
+        Some(DateFormat::BigEndian) => {
+            println!(
+                "{}-{}-{} is a {}",
+                date.year, date.month, date.day, human_readable_day_of_week
+            );
+        }
+        Some(DateFormat::MiddleEndian) => {
+            println!(
+                "{}-{}-{} is a {}",
+                date.month, date.day, date.year, human_readable_day_of_week
+            );
+        }
+        Some(DateFormat::LittleEndian) => {
+            println!(
+                "{}-{}-{} is a {}",
+                date.day, date.month, date.year, human_readable_day_of_week
+            );
+        }
+        _ => {
+            println!(
+                "{}-{}-{} is a {}",
+                date.month, date.day, date.year, human_readable_day_of_week
+            );
+        }
+    };
+}
+
 #[cfg(test)]
 mod tests {
     use crate::date::*;
