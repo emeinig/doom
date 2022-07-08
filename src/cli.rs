@@ -3,13 +3,14 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 pub struct Cli {
-    /// Default format is MM-DD-YYYY
+    /// Default format is MM-DD-YYYY. Slashes and periods are not accepted
     #[clap(value_parser = nonempty_string_or_none)]
     pub date: Option<String>,
     /// Accepted formats are "iso8601", "YMD" (year-month-day), "MYD"
     /// (month-year-day), & "DMY" (day-month-year)
     #[clap(short, long, value_parser = endian_format)]
     pub format: Option<DateFormat>,
+    /// Prints the ISO Week Date in addition to the day of week
     #[clap(short, long, action)]
     pub week_date: bool,
 }
