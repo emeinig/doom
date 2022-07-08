@@ -16,8 +16,8 @@ pub fn week_number(date: &Date, day_of_week: &isize) -> WeekDate {
 
     let week_of_year = if week_number < 1 {
         year -= 1;
-        weeks(&year)
-    } else if week_number > weeks(&year) {
+        weeks(year)
+    } else if week_number > weeks(year) {
         year += 1;
         1
     } else {
@@ -55,23 +55,23 @@ fn is_leap_year(date: &Date) -> bool {
 // finds if year is "short" (has 52 standard ISO weeks) or "long" (has a leap
 // week in it). This is needed because we need to check that the date isn't
 // in week 1 of the following year.
-fn weeks(year: &isize) -> isize {
-    if is_short(&year) {
+fn weeks(year: isize) -> isize {
+    if is_short(year) {
         52
     } else {
         53
     }
 }
 
-fn is_short(year: &isize) -> bool {
-    let current_year: bool = cassidy_func(&year) % 7 == 4;
-    let prev_year: bool = cassidy_func(&(year - 1)) % 7 == 3;
+fn is_short(year: isize) -> bool {
+    let current_year: bool = cassidy_func(year) % 7 == 4;
+    let prev_year: bool = cassidy_func(year - 1) % 7 == 3;
 
     !current_year && !prev_year
 }
 
 // Derived in 2001 by Simon Cassidy (United States)
-fn cassidy_func(year: &isize) -> isize {
+fn cassidy_func(year: isize) -> isize {
     year + (year / 4) - (year / 100) + (year / 400)
 }
 
@@ -85,8 +85,8 @@ mod tests {
         let short_year = 2003;
         let long_year = 2004;
 
-        assert!(is_short(&short_year));
-        assert!(!is_short(&long_year));
+        assert!(is_short(short_year));
+        assert!(!is_short(long_year));
     }
 
     #[test]
