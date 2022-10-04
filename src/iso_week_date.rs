@@ -1,6 +1,6 @@
 use crate::date::Date;
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct WeekDate {
     pub year: isize,
     pub week_of_year: isize,
@@ -9,15 +9,15 @@ pub struct WeekDate {
 
 pub fn week_number(date: &Date, day_of_week: &isize) -> WeekDate {
     let mut year = date.year;
-    let ordinal_date = ordinal_date(&date);
+    let ordinal_date = ordinal_date(*date);
     let weekday_number = if day_of_week == &0 { 7 } else { *day_of_week };
 
     let week_number = (10 + ordinal_date - weekday_number) / 7;
 
     let week_of_year = if week_number < 1 {
         year -= 1;
-        weeks(&year)
-    } else if week_number > weeks(&year) {
+        weeks(year)
+    } else if week_number > weeks(year) {
         year += 1;
         1
     } else {
@@ -25,15 +25,15 @@ pub fn week_number(date: &Date, day_of_week: &isize) -> WeekDate {
     };
 
     WeekDate {
-        year: year,
-        week_of_year: week_of_year,
+        year,
+        week_of_year,
         day: weekday_number,
     }
 }
 
 // AKA the day of the year. E.g. Nov 5 = 305th day of the year
-fn ordinal_date(date: &Date) -> isize {
-    let leap_year_offset = if is_leap_year(&date) && date.month > 2 {
+fn ordinal_date(date: Date) -> isize {
+    let leap_year_offset = if is_leap_year(date) && date.month > 2 {
         1
     } else {
         0
@@ -44,34 +44,30 @@ fn ordinal_date(date: &Date) -> isize {
     leap_year_offset + month_offset[date.month - 1] + date.day
 }
 
-fn is_leap_year(date: &Date) -> bool {
-    if (date.year % 4 == 0 && date.year % 100 != 0) || date.year % 400 == 0 {
-        true
-    } else {
-        false
-    }
+fn is_leap_year(date: Date) -> bool {
+    (date.year % 4 == 0 && date.year % 100 != 0) || date.year % 400 == 0
 }
 
 // finds if year is "short" (has 52 standard ISO weeks) or "long" (has a leap
 // week in it). This is needed because we need to check that the date isn't
 // in week 1 of the following year.
-fn weeks(year: &isize) -> isize {
-    if is_short(&year) {
+fn weeks(year: isize) -> isize {
+    if is_short(year) {
         52
     } else {
         53
     }
 }
 
-fn is_short(year: &isize) -> bool {
-    let current_year: bool = cassidy_func(&year) % 7 == 4;
-    let prev_year: bool = cassidy_func(&(year - 1)) % 7 == 3;
+fn is_short(year: isize) -> bool {
+    let current_year: bool = cassidy_func(year) % 7 == 4;
+    let prev_year: bool = cassidy_func(year - 1) % 7 == 3;
 
     !current_year && !prev_year
 }
 
 // Derived in 2001 by Simon Cassidy (United States)
-fn cassidy_func(year: &isize) -> isize {
+fn cassidy_func(year: isize) -> isize {
     year + (year / 4) - (year / 100) + (year / 400)
 }
 
@@ -85,8 +81,8 @@ mod tests {
         let short_year = 2003;
         let long_year = 2004;
 
-        assert!(is_short(&short_year));
-        assert!(!is_short(&long_year));
+        assert!(is_short(short_year));
+        assert!(!is_short(long_year));
     }
 
     #[test]
@@ -151,7 +147,7 @@ mod tests {
             month: 11,
             day: 5,
         };
-        let result = ordinal_date(&date);
+        let result = ordinal_date(date);
         assert_eq!(result, 310);
     }
 
@@ -175,13 +171,13 @@ mod tests {
             day: 1,
         };
 
-        let result1 = is_leap_year(&leap_year);
+        let result1 = is_leap_year(leap_year);
         assert!(result1);
 
-        let result2 = is_leap_year(&leap_century);
+        let result2 = is_leap_year(leap_century);
         assert!(result2);
 
-        let result3 = is_leap_year(&non_leap_century);
+        let result3 = is_leap_year(non_leap_century);
         assert!(!result3);
     }
 }
