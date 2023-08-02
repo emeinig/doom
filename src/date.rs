@@ -28,9 +28,9 @@ fn build_date_struct(
     let month = string_month.parse::<usize>();
     let day = string_day.parse::<isize>();
 
-    if year.is_ok_and(|&year| year >= 1752)
-        && month.is_ok_and(|&month| month > 0 && month <= 12)
-        && day.is_ok_and(|&day| day > 0 && day <= 31)
+    if year.as_ref().is_ok_and(|year| year >= &1752)
+        && month.as_ref().is_ok_and(|month| month > &0 && month <= &12)
+        && day.as_ref().is_ok_and(|day| day > &0 && day <= &31)
     {
         Ok(Date {
             year: year.unwrap(),
